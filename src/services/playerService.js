@@ -35,9 +35,9 @@ export const createPlayer = async (player, imageFile) => {
   for (const key in player) {
     formData.append(key, player[key]);
   }
-  // if (imageFile) {
-  //   formData.append('image', imageFile);
-  // }
+  if (imageFile) {
+    formData.append('image', imageFile);
+  }
 
   const response = await fetch(`${API_BASE_URL}/players`, {
     method: 'POST',
@@ -73,12 +73,14 @@ export const updatePlayer = async (id, player, imageFile) => {
 
 
 export const deletePlayer = async (id) => {
-  const response = await fetch(`${API_BASE_URL}/admin/players/${id}`, {
+  const response = await fetch(`${API_BASE_URL}/players/${id}`, {
     method: 'DELETE',
     headers: {
       'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
     }
   });
   if (!response.ok) throw new Error('Failed to delete player');
-  return await response.json();
+  // return await response.json();
+   const text = await response.text();
+  return text ? JSON.parse(text) : null;
 };

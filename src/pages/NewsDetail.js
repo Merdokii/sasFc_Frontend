@@ -38,9 +38,10 @@ export const NewsDetail = () => {
   return (
     <div className="container mx-auto px-4 py-8 max-w-3xl">
       <img 
-        src={newsItem.image} 
+        src={newsItem.imageUrl || process.env.PUBLIC_URL + '/images/news-default.jpg'} 
         alt={newsItem.title} 
         className="w-full h-64 object-cover rounded-lg mb-6"
+        onError={e => { e.target.onerror = null; e.target.src = process.env.PUBLIC_URL + '/images/news-default.jpg'; }}
       />
       <h1 className="text-4xl font-bold mb-4">{newsItem.title}</h1>
       <div className="flex items-center text-gray-600 text-sm mb-6">

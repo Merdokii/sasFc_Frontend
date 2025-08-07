@@ -17,6 +17,11 @@ export const Dashboard = () => {
               </Link>
             </li>
             <li>
+              <Link to="/admin/teams/new" className="text-sas-green-700 hover:underline font-medium">
+                Add New Team
+              </Link>
+            </li>
+            <li>
               <Link to="/admin/matches/new" className="text-sas-green-700 hover:underline font-medium">
                 Schedule Match
               </Link>
@@ -24,6 +29,11 @@ export const Dashboard = () => {
             <li>
               <Link to="/admin/news/new" className="text-sas-green-700 hover:underline font-medium">
                 Create News Article
+              </Link>
+            </li>
+            <li>
+              <Link to="/admin/gallery/new" className="text-sas-green-700 hover:underline font-medium">
+                Create News Photo Gallery
               </Link>
             </li>
             <li>

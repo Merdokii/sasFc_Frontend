@@ -22,6 +22,9 @@ const AdminNav = () => {
             <Link to="/admin/dashboard" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-sas-green-700">
               Dashboard
             </Link>
+            <Link to="/admin/teams" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-sas-green-700">
+              Teams
+            </Link>
             <Link to="/admin/players" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-sas-green-700">
               Players
             </Link>
@@ -30,6 +33,9 @@ const AdminNav = () => {
             </Link>
             <Link to="/admin/news" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-sas-green-700">
               News
+            </Link>
+            <Link to="/admin/gallery" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-sas-green-700">
+              Gallery
             </Link>
             <Link to="/admin/users" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-sas-green-700">
               Users

@@ -1,3 +1,4 @@
+// ...existing imports...
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getPlayerDetails, createPlayer, updatePlayer } from '../../services/playerService';
@@ -16,8 +17,8 @@ export const PlayerForm = () => {
     joinedDate: '',
     teamCategory: '',
     isActive: true,
-    image: null, // This will be a File
-    imageUrl: ''  // For preview or fallback
+    image: null,
+    imageUrl: ''
   });
 
   useEffect(() => {
@@ -54,40 +55,67 @@ export const PlayerForm = () => {
     } else if (type === 'file') {
       setFormData(prev => ({
         ...prev,
-        image: files[0],
-        imageUrl: URL.createObjectURL(files[0])
+        image: files && files.length > 0 ? files[0] : null,
+        imageUrl: files && files.length > 0 ? URL.createObjectURL(files[0]) : prev.imageUrl
       }));
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const payload = new FormData();
-      payload.append('name', formData.name);
-      payload.append('position', formData.position);
-      payload.append('jerseyNumber', formData.jerseyNumber);
-      payload.append('age', formData.age);
-      payload.append('nationality', formData.nationality);
-      payload.append('bio', formData.bio);
-      payload.append('joinedDate', formData.joinedDate);
-      payload.append('teamCategory', formData.teamCategory);
-      payload.append('isActive', formData.isActive ? 1 : 0);
-      if (formData.image) payload.append('image', formData.image);
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const payload = new FormData();
+  //     payload.append('name', formData.name);
+  //     payload.append('position', formData.position);
+  //     payload.append('jerseyNumber', formData.jerseyNumber);
+  //     payload.append('age', formData.age);
+  //     payload.append('nationality', formData.nationality);
+  //     payload.append('bio', formData.bio);
+  //     payload.append('joinedDate', formData.joinedDate);
+  //     payload.append('teamCategory', formData.teamCategory);
+  //     payload.append('isActive', formData.isActive ? 1 : 0);
+  //     if (formData.image) {
+  //       payload.append('image', formData.image);
+  //     }
 
-      if (id) {
-        await updatePlayer(id, payload);
-      } else {
-        await createPlayer(payload);
-      }
-      navigate('/admin/players');
-    } catch (error) {
-      console.error('Error saving player:', error);
+  //     if (id) {
+  //       await updatePlayer(id, payload);
+  //     } else {
+  //       await createPlayer(payload);
+  //     }
+  //     navigate('/admin/players');
+  //   } catch (error) {
+  //     console.error('Error saving player:', error);
+  //   }
+  // };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    // Prepare player object (excluding image)
+    const playerData = {
+      name: formData.name,
+      position: formData.position,
+      jerseyNumber: formData.jerseyNumber,
+      age: formData.age,
+      nationality: formData.nationality,
+      bio: formData.bio,
+      joinedDate: formData.joinedDate,
+      teamCategory: formData.teamCategory,
+      isActive: formData.isActive ? 1 : 0
+    };
+
+    if (id) {
+      await updatePlayer(id, playerData, formData.image);
+    } else {
+      await createPlayer(playerData, formData.image);
     }
-  };
-
+    navigate('/admin/players');
+  } catch (error) {
+    console.error('Error saving player:', error);
+  }
+};
   if (loading) return <div>Loading...</div>;
 
   return (
@@ -98,7 +126,6 @@ export const PlayerForm = () => {
 
       <form onSubmit={handleSubmit} className="space-y-4" encType="multipart/form-data">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          
           <div>
             <label className="block mb-1">Full Name</label>
             <input
@@ -110,7 +137,6 @@ export const PlayerForm = () => {
               className="w-full border px-3 py-2 rounded"
             />
           </div>
-
           <div>
             <label className="block mb-1">Position</label>
             <select
@@ -127,7 +153,6 @@ export const PlayerForm = () => {
               <option value="FORWARD">Forward</option>
             </select>
           </div>
-
           <div>
             <label className="block mb-1">Jersey Number</label>
             <input
@@ -141,7 +166,6 @@ export const PlayerForm = () => {
               className="w-full border px-3 py-2 rounded"
             />
           </div>
-
           <div>
             <label className="block mb-1">Age</label>
             <input
@@ -155,7 +179,6 @@ export const PlayerForm = () => {
               className="w-full border px-3 py-2 rounded"
             />
           </div>
-
           <div>
             <label className="block mb-1">Nationality</label>
             <input
@@ -166,7 +189,6 @@ export const PlayerForm = () => {
               className="w-full border px-3 py-2 rounded"
             />
           </div>
-
           <div>
             <label className="block mb-1">Joined Date</label>
             <input
@@ -177,7 +199,6 @@ export const PlayerForm = () => {
               className="w-full border px-3 py-2 rounded"
             />
           </div>
-
           <div>
             <label className="block mb-1">Team Category</label>
             <select
@@ -193,7 +214,6 @@ export const PlayerForm = () => {
               <option value="STAFF">Staff</option>
             </select>
           </div>
-
           <div>
             <label className="block mb-1">Bio</label>
             <textarea
@@ -204,7 +224,6 @@ export const PlayerForm = () => {
               rows="3"
             />
           </div>
-
           <div>
             <label className="block mb-1">Active</label>
             <input
@@ -216,7 +235,6 @@ export const PlayerForm = () => {
             />
             <span>{formData.isActive ? 'Yes' : 'No'}</span>
           </div>
-
           <div>
             <label className="block mb-1">Upload Image</label>
             <input
@@ -231,7 +249,6 @@ export const PlayerForm = () => {
             )}
           </div>
         </div>
-
         <div className="flex justify-end gap-4 pt-6">
           <button
             type="button"

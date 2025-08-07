@@ -1,48 +1,98 @@
 import { useEffect, useState } from 'react';
-import { getGalleryImages } from '../services/galleryService';
+import { GalleryCard } from '../components/common/GalleryCard'; // Import the new card component
+import { getGalleries } from '../services/galleryService';
 
 export const Gallery = () => {
-  const [images, setImages] = useState([]);
+  const [galleries, setGalleries] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [activeCategory, setActiveCategory] = useState('All');
 
   useEffect(() => {
-    const fetchImages = async () => {
+    const fetchGalleries = async () => {
       try {
-        const data = await getGalleryImages();
-        setImages(data);
+        const data = await getGalleries();
+        setGalleries(data);
       } catch (error) {
-        console.error('Error fetching gallery images:', error);
+        console.error('Error fetching galleries:', error);
       } finally {
         setLoading(false);
       }
     };
-    fetchImages();
+    fetchGalleries();
   }, []);
 
+  // Filter galleries by category
+  const filteredGalleries = activeCategory === 'All' 
+    ? galleries 
+    : galleries.filter(gallery => gallery.category === activeCategory);
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Gallery</h1>
-      
-      {loading ? (
-        <div className="text-center py-8">Loading gallery...</div>
-      ) : images.length > 0 ? (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {images.map((image, index) => (
-            <div key={index} className="overflow-hidden rounded-lg shadow-md hover:shadow-lg transition">
-              <img 
-                src={image.url} 
-                alt={image.caption || 'Gallery image'} 
-                className="w-full h-48 object-cover hover:scale-105 transition-transform"
-              />
-              {image.caption && (
-                <p className="p-2 text-sm text-center">{image.caption}</p>
-              )}
-            </div>
+    <div className="relative overflow-hidden bg-gradient-to-b from-gray-900 to-gray-950 min-h-screen">
+      {/* Decorative elements */}
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#339c0c] via-[#f9fd06] to-[#339c0c]"></div>
+      <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-[#f9fd06]/10 blur-3xl"></div>
+
+      <div className="container mx-auto px-4 py-16 relative z-10">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <span className="inline-block text-[#339c0c] font-bold mb-3 tracking-wider uppercase text-sm">
+            Visual Archives
+          </span>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
+            Club Galleries
+          </h1>
+          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+            Relive our greatest moments through the lens
+          </p>
+        </div>
+
+        {/* Category Filter */}
+        <div className="flex flex-wrap justify-center gap-2 mb-12">
+          {['All', 'Matches', 'Training', 'Community', 'Events'].map((category) => (
+            <button
+              key={category}
+              onClick={() => setActiveCategory(category)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                activeCategory === category
+                  ? 'bg-[#339c0c] text-white shadow-md'
+                  : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+              }`}
+            >
+              {category}
+            </button>
           ))}
         </div>
-      ) : (
-        <p className="text-center py-8">No images available in gallery</p>
-      )}
+
+        {/* Gallery Grid */}
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[...Array(6)].map((_, index) => (
+              <div 
+                key={index} 
+                className="bg-gray-800 rounded-2xl aspect-[4/3] animate-pulse"
+              />
+            ))}
+          </div>
+        ) : filteredGalleries.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredGalleries.map((gallery) => (
+              <GalleryCard 
+                key={gallery.id} 
+                gallery={gallery} 
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-16 bg-gray-800/50 rounded-xl border border-gray-700">
+            <div className="text-gray-400 mb-3">No galleries found</div>
+            <p className="text-gray-500 max-w-md mx-auto">
+              {activeCategory === 'All' 
+                ? 'Check back later for updates' 
+                : `No ${activeCategory.toLowerCase()} galleries available`}
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

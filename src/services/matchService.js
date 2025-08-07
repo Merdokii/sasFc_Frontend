@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.REACT_APP_API_URL;
+const API_BASE_URL = "http://localhost:8080/api";
 
 // Get all matches
 export const getMatches = async () => {
@@ -28,21 +28,29 @@ export const getMatch = async (id) => {
   return await response.json();
 };
 
-// Create new match
+// ✅ Create new match using FormData
 export const createMatch = async (matchData) => {
+  const formData = new FormData();
+
+  for (const key in matchData) {
+    if (matchData[key] !== null && matchData[key] !== undefined) {
+      formData.append(key, matchData[key]);
+    }
+  }
+
   const response = await fetch(`${API_BASE_URL}/matches`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
       'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
     },
-    body: JSON.stringify(matchData)
+    body: formData
   });
+
   if (!response.ok) throw new Error('Failed to create match');
   return await response.json();
 };
 
-// Update match
+// Update match using JSON (Assuming backend accepts it)
 export const updateMatch = async (id, matchData) => {
   const response = await fetch(`${API_BASE_URL}/matches/${id}`, {
     method: 'PUT',

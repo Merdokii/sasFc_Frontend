@@ -1,9 +1,21 @@
-const API_BASE_URL = 'http://localhost:8080/api/gallery';
+const API_BASE_URL = 'http://localhost:8080/api';
 
 /**
  * Fetches all gallery images from the backend
  * @returns {Promise<Array>} Array of gallery images
  */
+// 
+export const getGalleries = async () => {
+  const response = await fetch(`${API_BASE_URL}/gallery`);
+  if (!response.ok) throw new Error('Failed to fetch gallery');
+  return await response.json();
+};
+
+export const getGalleryById = async (id) => {
+  const response = await fetch(`${API_BASE_URL}/${id}`);
+  if (!response.ok) throw new Error('Failed to fetch gallery item');
+  return await response.json();
+};
 export const getGalleryImages = async () => {
   try {
     const response = await fetch(`${API_BASE_URL}/images`);
