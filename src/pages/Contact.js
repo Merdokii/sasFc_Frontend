@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { sendContactMessage } from '../services/contactService';
+import { FaSpinner, FaMapMarkerAlt, FaPhone, FaEnvelope, FaPaperPlane } from 'react-icons/fa';
+import { GiSoccerField } from 'react-icons/gi';
 
 export const Contact = () => {
   const [formData, setFormData] = useState({
@@ -23,51 +25,71 @@ export const Contact = () => {
     
     try {
       await sendContactMessage(formData);
-      setSubmitStatus({ success: true, message: 'Your message has been sent successfully!' });
+      setSubmitStatus({ 
+        success: true, 
+        message: 'Your message has been sent successfully! We will get back to you soon.' 
+      });
       setFormData({ name: '', email: '', subject: '', message: '' });
     } catch (error) {
-      setSubmitStatus({ success: false, message: 'Failed to send message. Please try again later.' });
+      setSubmitStatus({ 
+        success: false, 
+        message: 'Failed to send message. Please try again later or contact us directly.' 
+      });
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="relative overflow-hidden bg-gradient-to-b from-gray-50 to-white">
-      {/* Decorative elements */}
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#339c0c] via-[#f9fd06] to-[#339c0c]"></div>
+    <div className="relative min-h-screen bg-white overflow-hidden">
+      {/* Top spacer to ensure navbar visibility */}
+      <div className="h-20 w-full bg-gradient-to-br from-gray-900 to-gray-800"></div>
+      
+      {/* SAS FC Brand Elements (adjusted for white background) */}
+      <div className="fixed top-0 left-0 w-full h-1 bg-gradient-to-r from-[#339c0c] via-[#f9fd06] to-[#339c0c] z-20"></div>
       <div className="absolute -bottom-20 -right-20 w-64 h-64 rounded-full bg-[#f9fd06]/10 blur-3xl"></div>
+      <div className="absolute -top-20 -left-20 w-64 h-64 rounded-full bg-[#339c0c]/10 blur-3xl"></div>
 
-      <div className="container mx-auto px-4 py-20 relative z-10">
-        {/* Hero Section */}
-        <div className="text-center mb-16">
-          <span className="inline-block text-[#339c0c] font-bold mb-3 tracking-wider">GET IN TOUCH</span>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700">
-            Contact Our Club
+      <div className="container mx-auto px-4 py-12 relative z-10">
+        {/* Hero Section with adjusted top padding */}
+        <div className="text-center mb-16 pt-8">
+          <span className="inline-block text-[#339c0c] font-bold mb-3 tracking-widest uppercase text-sm">
+            Connect With Us
+          </span>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
+            Contact <span className="text-[#339c0c]">SAS FC</span>
           </h1>
+          <div className="w-24 h-1 bg-gradient-to-r from-[#339c0c] to-[#f9fd06] mx-auto mb-6"></div>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Have questions or feedback? We'd love to hear from you.
+            Have questions, feedback, or partnership inquiries? Our team is ready to assist you.
           </p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
           {/* Contact Form */}
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
+          <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200 hover:shadow-[0_20px_50px_-10px_rgba(249,253,6,0.2)] transition-all duration-500">
             <div className="p-8 md:p-10">
+              <div className="flex items-center mb-8">
+                <div className="bg-[#339c0c] p-3 rounded-xl mr-4">
+                  <FaPaperPlane className="text-white text-xl" />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900">Send Us a Message</h2>
+              </div>
+              
               {submitStatus && (
-                <div className={`mb-6 p-4 rounded-lg text-center ${
+                <div className={`mb-6 p-4 rounded-lg ${
                   submitStatus.success 
-                    ? 'bg-green-100 text-green-800 border border-green-200' 
-                    : 'bg-red-100 text-red-800 border border-red-200'
+                    ? 'bg-green-50 text-green-800 border border-green-200' 
+                    : 'bg-red-50 text-red-800 border border-red-200'
                 }`}>
-                  {submitStatus.message}
+                  <p className="font-medium">{submitStatus.message}</p>
                 </div>
               )}
               
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
                     <input
                       type="text"
                       id="name"
@@ -75,13 +97,13 @@ export const Contact = () => {
                       value={formData.name}
                       onChange={handleChange}
                       required
-                      className="w-full px-5 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#339c0c] focus:border-[#339c0c] transition-all"
+                      className="w-full px-5 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#339c0c] focus:border-[#339c0c] transition-all placeholder-gray-400"
                       placeholder="Your name"
                     />
                   </div>
                   
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Email *</label>
                     <input
                       type="email"
                       id="email"
@@ -89,14 +111,14 @@ export const Contact = () => {
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      className="w-full px-5 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#339c0c] focus:border-[#339c0c] transition-all"
+                      className="w-full px-5 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#339c0c] focus:border-[#339c0c] transition-all placeholder-gray-400"
                       placeholder="your@email.com"
                     />
                   </div>
                 </div>
                 
                 <div>
-                  <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                  <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">Subject *</label>
                   <input
                     type="text"
                     id="subject"
@@ -104,13 +126,13 @@ export const Contact = () => {
                     value={formData.subject}
                     onChange={handleChange}
                     required
-                    className="w-full px-5 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#339c0c] focus:border-[#339c0c] transition-all"
+                    className="w-full px-5 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#339c0c] focus:border-[#339c0c] transition-all placeholder-gray-400"
                     placeholder="What's this about?"
                   />
                 </div>
                 
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">Your Message</label>
+                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">Message *</label>
                   <textarea
                     id="message"
                     name="message"
@@ -118,8 +140,8 @@ export const Contact = () => {
                     value={formData.message}
                     onChange={handleChange}
                     required
-                    className="w-full px-5 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#339c0c] focus:border-[#339c0c] transition-all"
-                    placeholder="Write your message here..."
+                    className="w-full px-5 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#339c0c] focus:border-[#339c0c] transition-all placeholder-gray-400"
+                    placeholder="Your message here..."
                   ></textarea>
                 </div>
                 
@@ -131,14 +153,14 @@ export const Contact = () => {
                   >
                     {isSubmitting ? (
                       <>
-                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
+                        <FaSpinner className="animate-spin mr-3" />
                         Sending...
                       </>
                     ) : (
-                      'Send Message'
+                      <>
+                        <FaPaperPlane className="mr-3" />
+                        Send Message
+                      </>
                     )}
                   </button>
                 </div>
@@ -148,57 +170,88 @@ export const Contact = () => {
 
           {/* Contact Information */}
           <div className="space-y-8">
-            <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl shadow-xl p-8 md:p-10 text-white">
-              <h2 className="text-2xl font-bold mb-6 flex items-center">
-                <span className="w-8 h-8 bg-[#f9fd06] rounded-full flex items-center justify-center text-gray-900 mr-4">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
-                </span>
-                Contact Details
-              </h2>
+            <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl shadow-2xl p-8 md:p-10 text-white">
+              <div className="flex items-center mb-8">
+                <div className="bg-[#f9fd06] p-3 rounded-xl mr-4">
+                  <GiSoccerField className="text-gray-900 text-xl" />
+                </div>
+                <h2 className="text-2xl font-bold">Club Information</h2>
+              </div>
               
-              <div className="space-y-6">
+              <div className="space-y-8">
                 <div className="flex items-start">
-                  <svg className="w-6 h-6 text-[#f9fd06] mt-1 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
+                  <div className="bg-[#339c0c]/20 p-3 rounded-lg mr-4">
+                    <FaMapMarkerAlt className="text-[#f9fd06] text-xl" />
+                  </div>
                   <div>
-                    <h3 className="font-bold text-lg mb-1">Club Headquarters</h3>
+                    <h3 className="font-bold text-lg mb-2">Our Headquarters</h3>
                     <p className="text-white/80">Saris Addis Sefer</p>
                     <p className="text-white/80">Addis Ababa, Ethiopia</p>
+                    <p className="text-white/80 mt-2">Open: Mon-Fri, 9AM-5PM</p>
                   </div>
                 </div>
                 
                 <div className="flex items-start">
-                  <svg className="w-6 h-6 text-[#f9fd06] mt-1 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
+                  <div className="bg-[#339c0c]/20 p-3 rounded-lg mr-4">
+                    <FaEnvelope className="text-[#f9fd06] text-xl" />
+                  </div>
                   <div>
-                    <h3 className="font-bold text-lg mb-1">Email Us</h3>
-                    <a href="mailto:info@sasfc.com" className="text-white/80 hover:text-[#f9fd06] transition-colors">info@sasfc.com</a>
+                    <h3 className="font-bold text-lg mb-2">Email Addresses</h3>
+                    <div className="space-y-1">
+                      <a href="mailto:info@sasfc.com" className="block text-white/80 hover:text-[#f9fd06] transition-colors">info@sasfc.com</a>
+                      <a href="mailto:support@sasfc.com" className="block text-white/80 hover:text-[#f9fd06] transition-colors">support@sasfc.com</a>
+                      <a href="mailto:partnerships@sasfc.com" className="block text-white/80 hover:text-[#f9fd06] transition-colors">partnerships@sasfc.com</a>
+                    </div>
                   </div>
                 </div>
                 
                 <div className="flex items-start">
-                  <svg className="w-6 h-6 text-[#f9fd06] mt-1 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
+                  <div className="bg-[#339c0c]/20 p-3 rounded-lg mr-4">
+                    <FaPhone className="text-[#f9fd06] text-xl" />
+                  </div>
                   <div>
-                    <h3 className="font-bold text-lg mb-1">Call Us</h3>
-                    <a href="tel:+251123456789" className="text-white/80 hover:text-[#f9fd06] transition-colors">+251 123 456 789</a>
+                    <h3 className="font-bold text-lg mb-2">Phone Numbers</h3>
+                    <div className="space-y-1">
+                      <a href="tel:+251123456789" className="block text-white/80 hover:text-[#f9fd06] transition-colors">+251 123 456 789 (General)</a>
+                      <a href="tel:+251987654321" className="block text-white/80 hover:text-[#f9fd06] transition-colors">+251 987 654 321 (Tickets)</a>
+                      <a href="tel:+251112223334" className="block text-white/80 hover:text-[#f9fd06] transition-colors">+251 112 223 334 (Academy)</a>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Map Placeholder */}
-            <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200 h-64 md:h-80">
-              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                <span className="text-gray-500">Club Location Map</span>
+            {/* Map Embed */}
+            <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200 h-64 md:h-80 relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#339c0c]/10 to-[#f9fd06]/10 flex items-center justify-center">
+                <div className="text-center p-6 bg-white/90 rounded-xl shadow-sm border border-gray-200">
+                  <GiSoccerField className="mx-auto text-4xl text-[#339c0c] mb-3" />
+                  <h3 className="font-bold text-gray-800 mb-1">SAS FC Stadium</h3>
+                  <p className="text-gray-600 text-sm">Saris Addis Sefer, Addis Ababa</p>
+                  <button className="mt-3 px-4 py-2 bg-[#339c0c] hover:bg-[#2a850a] text-white text-sm rounded-full transition-colors">
+                    View on Map
+                  </button>
+                </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Social Media Section */}
+        <div className="max-w-4xl mx-auto mt-20 text-center">
+          <h3 className="text-xl font-bold text-gray-800 mb-6">Follow Us On Social Media</h3>
+          <div className="flex justify-center space-x-6">
+            {['Facebook', 'Twitter', 'Instagram', 'YouTube'].map((platform) => (
+              <a 
+                key={platform} 
+                href="#" 
+                className="w-12 h-12 bg-gray-100 hover:bg-[#339c0c] rounded-full flex items-center justify-center text-gray-700 hover:text-white transition-all duration-300"
+                aria-label={platform}
+              >
+                <span className="sr-only">{platform}</span>
+                <span className="text-xl">{platform.charAt(0)}</span>
+              </a>
+            ))}
           </div>
         </div>
       </div>
